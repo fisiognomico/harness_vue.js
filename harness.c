@@ -11,6 +11,7 @@ int main(int argc, char **argv) {
     signal(SIGTERM, signal_handler);
     atexit(cleanup_folder);
 
+    srand(time(NULL));
     // The input is taken from the stated file, which contains the data
     // necessary. In a future release I could also mutate other parameters.
     if(argc != 2) {
@@ -33,12 +34,12 @@ int main(int argc, char **argv) {
         if (len < 20)
             return -3;
         // Cut the fuzzer input
-        len = len % 400;
-        int half_len = len / 2;
-        char *user = malloc(half_len);
-        char *event = malloc(half_len);
-        read(fd, user, half_len);
-        read(fd, event, half_len);
+        int user_len = rand() % (len / 2);
+        int event_len = rand() % (len / 2);
+        char *user = malloc(user_len);
+        char *event = malloc(event_len);
+        read(fd, user, user_len);
+        read(fd, event, event_len);
 
         // Launch the actual tests, use an environment variable to pass the
         // seeded values
@@ -47,7 +48,7 @@ int main(int argc, char **argv) {
         char command[255];
         char *tests = getenv("FUZZER_TEST");
         sprintf(command, "node %s", tests);
-        execv("/usr/bin/env", command);
+        execv("/usr/bin/env", &command);
 
 
         // Wait until a lock file (written finished tests) is present
