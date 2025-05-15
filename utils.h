@@ -7,6 +7,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <sys/stat.h>
+#include <time.h>
 #include <libxml/HTMLparser.h>
 #include <libxml/HTMLtree.h>
 
